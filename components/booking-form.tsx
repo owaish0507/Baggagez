@@ -390,7 +390,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
                   <div>
-                    <Label htmlFor="pickupTime">Pickup Time *</Label>
+                    <Label htmlFor="pickupTime">Drop-off Time </Label>
                     <Input
                       id="pickupTime"
                       type="time"
@@ -426,7 +426,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
                     <p className="text-xs text-red-600 mt-1">⚠️ Arrive within 30 minutes or charges will auto-upgrade</p>
                   </div>
                   <div>
-                    <Label htmlFor="dropoffTime">Drop-off Time *</Label>
+                    <Label htmlFor="dropoffTime">Pickup Time   </Label>
                     <Input
                       id="dropoffTime"
                       type="time"
