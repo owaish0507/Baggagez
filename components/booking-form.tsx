@@ -542,9 +542,9 @@ export function BookingForm({ partnerId }: BookingFormProps) {
                     <li>
                       • <strong>Free cancellation up to 30 minutes after booking</strong>
                     </li>
-                    <li>• Full refund will be processed within 3-5 business days</li>
+                    <li>• Full refund will be processed within 1-2 working days</li>
                     <li>• After 30 minutes, cancellation charges may apply</li>
-                    <li>• No-show policy: 50% of booking amount will be charged</li>
+                    <li>• No-show policy: 100% of booking amount will be charged</li>
                   </ul>
                 </div>
               </CardContent>

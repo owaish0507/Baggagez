@@ -267,7 +267,7 @@ export function BaggageDropOff({ bookingId }: BaggageDropOffProps) {
                 <ul className="text-xs text-gray-600 space-y-1">
                   <li>• 20-minute buffer time included</li>
                   <li>• Auto-upgrade if time exceeds</li>
-                  <li>• Early pickup discount available</li>
+                  
                   <li>• Free cancellation within 30 mins</li>
                 </ul>
               </div>
