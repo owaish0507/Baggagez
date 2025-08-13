@@ -130,56 +130,12 @@ export function PickupQRCode({ bookingId }: PickupQRCodeProps) {
             <CardContent className="text-center space-y-6">
               {/* QR Code Display */}
               <div className="w-64 h-64 mx-auto bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center p-4">
-                <div className="w-full h-full bg-black relative">
-                  {/* QR Code Pattern */}
-                  <div className="absolute inset-2 bg-white">
-                    <div className="grid grid-cols-20 gap-0 h-full w-full">
-                      {Array.from({ length: 400 }, (_, i) => {
-                        const row = Math.floor(i / 20)
-                        const col = i % 20
-                        const isBlack =
-                          // Corner squares
-                          (row < 7 &&
-                            col < 7 &&
-                            (row === 0 ||
-                              row === 6 ||
-                              col === 0 ||
-                              col === 6 ||
-                              (row >= 2 && row <= 4 && col >= 2 && col <= 4))) ||
-                          (row < 7 &&
-                            col > 12 &&
-                            (row === 0 ||
-                              row === 6 ||
-                              col === 13 ||
-                              col === 19 ||
-                              (row >= 2 && row <= 4 && col >= 15 && col <= 17))) ||
-                          (row > 12 &&
-                            col < 7 &&
-                            (row === 13 ||
-                              row === 19 ||
-                              col === 0 ||
-                              col === 6 ||
-                              (row >= 15 && row <= 17 && col >= 2 && col <= 4))) ||
-                          // Timing patterns
-                          (row === 6 && col % 2 === 0) ||
-                          (col === 6 && row % 2 === 0) ||
-                          // Data pattern (pseudo-random based on booking ID)
-                          ((row + col + bookingId.charCodeAt(0)) % 3 === 0 &&
-                            row > 8 &&
-                            col > 8 &&
-                            row < 13 &&
-                            col < 13) ||
-                          ((row * col + bookingId.length) % 4 === 0 && row > 7 && col > 7 && !(row === 6 || col === 6))
-
-                        return <div key={i} className={`${isBlack ? "bg-black" : "bg-white"} w-full h-full`} />
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Center logo area */}
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-black flex items-center justify-center">
-                    <span className="text-xs font-bold">BZ</span>
-                  </div>
+                <div className="w-full h-full bg-white flex items-center justify-center">
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/photo_6118570613170882920_y.jpg-Zl2TTNeB3U7WKpUvqHh1xcpbck8Hwu.jpeg"
+                    alt={`QR Code for booking ${bookingId}`}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </div>
 

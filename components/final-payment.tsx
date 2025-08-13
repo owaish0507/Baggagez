@@ -175,20 +175,8 @@ export function FinalPayment({ bookingId }: FinalPaymentProps) {
                       PayPal
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
-                    <RadioGroupItem value="crypto" id="crypto" />
-                    <Label htmlFor="crypto" className="flex items-center cursor-pointer">
-                      <Smartphone className="w-5 h-5 mr-2 text-yellow-500" />
-                      Cryptocurrency
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
-                    <RadioGroupItem value="bnpl" id="bnpl" />
-                    <Label htmlFor="bnpl" className="flex items-center cursor-pointer">
-                      <Building className="w-5 h-5 mr-2 text-pink-600" />
-                      Buy Now Pay Later
-                    </Label>
-                  </div>
+                  
+                  
                 </div>
               </RadioGroup>
             </CardContent>

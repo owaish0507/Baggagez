@@ -191,10 +191,40 @@ export function BaggageDropOff({ bookingId }: BaggageDropOffProps) {
                   <div className="text-center py-6">
                     <div className="text-4xl font-bold text-blue-600 mb-2">{countdown}</div>
                     <p className="text-gray-600 mb-4">Time remaining (including 20min buffer)</p>
-                    <Button onClick={handleRequestPickup} className="bg-red-600 hover:bg-red-700" size="lg">
-                      Request Pickup
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
+
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button onClick={handleRequestPickup} className="bg-red-600 hover:bg-red-700" size="lg">
+                        Request Pickup
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+
+                      {(() => {
+                        const now = new Date()
+                        const timeSinceDropOff = dropOffTime ? (now.getTime() - dropOffTime.getTime()) / (1000 * 60) : 0 // minutes
+                        const canCancel = timeSinceDropOff <= 30
+
+                        return canCancel ? (
+                          <Button
+                            onClick={() => {
+                              if (
+                                confirm("Are you sure you want to cancel this booking? No charges will be applied.")
+                              ) {
+                                // Handle cancellation logic
+                                sessionStorage.removeItem("bookingData")
+                                router.push("/")
+                              }
+                            }}
+                            variant="outline"
+                            className="border-red-600 text-red-600 hover:bg-red-50"
+                            size="lg"
+                          >
+                            Cancel Booking (Free)
+                          </Button>
+                        ) : (
+                          <div className="text-sm text-gray-500 mt-2">Cancellation not available after 30 minutes</div>
+                        )
+                      })()}
+                    </div>
                   </div>
                 </div>
               )}
