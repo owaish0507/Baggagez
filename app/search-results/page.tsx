@@ -37,7 +37,8 @@ export default function SearchResultsPage() {
       type: "Railway Station",
       distance: "0.5 km",
       city: "Delhi NCR",
-      image: "/images/delhi-red-fort.jpg",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Old_Delhi_Railway_Station_%28DLI%29.jpg-5DDjPf2GqqDRdPOfOYomKVlmahIJU5.jpeg",
       maxBaggageLimit: 50,
       currentAvailableBags: 45,
     },
@@ -52,7 +53,8 @@ export default function SearchResultsPage() {
       type: "Business Center",
       distance: "1.2 km",
       city: "Delhi NCR",
-      image: "/images/storage-facility.jpg",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Office_Interior_12_b2afb8af-8552-4fd7-ba6e-79f54421df37-YDSIm5aBmsI5iUWZa4kmIkeIlWgsLt.webp",
       maxBaggageLimit: 30,
       currentAvailableBags: 25,
     },
@@ -97,7 +99,8 @@ export default function SearchResultsPage() {
       type: "Business Center",
       distance: "2.1 km",
       city: "Delhi NCR",
-      image: "/images/bangalore-tech.jpg",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Office_Interior_12_b2afb8af-8552-4fd7-ba6e-79f54421df37-YDSIm5aBmsI5iUWZa4kmIkeIlWgsLt.webp",
       maxBaggageLimit: 30,
       currentAvailableBags: 28,
     },
@@ -129,7 +132,8 @@ export default function SearchResultsPage() {
       type: "Railway Station",
       distance: "0.3 km",
       city: "Mumbai",
-      image: "/images/mumbai-cst.jpg",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Old_Delhi_Railway_Station_%28DLI%29.jpg-5DDjPf2GqqDRdPOfOYomKVlmahIJU5.jpeg",
       maxBaggageLimit: 50,
       currentAvailableBags: 42,
     },
@@ -159,7 +163,8 @@ export default function SearchResultsPage() {
       type: "Business Center",
       distance: "1.4 km",
       city: "Mumbai",
-      image: "/images/hotel-storage.jpg",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pcm__fa64facf-b464-4ca4-85b4-9944595bc37e_0-W2uo6tywqMQDrr8fb89rOHjk3OIPrW.png",
       maxBaggageLimit: 30,
       currentAvailableBags: 25,
     },

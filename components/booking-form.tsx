@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { AlertCircle, Clock, Info, ArrowLeft } from "lucide-react"
+import { AlertCircle, Clock, Info, ArrowLeft, User, CheckCircle } from "lucide-react"
 import { format, parseISO, isValid, isToday, isTomorrow } from "date-fns"
 
 interface BookingFormProps {
@@ -20,6 +20,16 @@ export function BookingForm({ partnerId }: BookingFormProps) {
   const searchParams = useSearchParams()
   const selectedDate = searchParams.get("date")
   const dateDisplay = searchParams.get("dateDisplay") || "Today"
+
+  // Check if user is logged in
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("userToken") || sessionStorage.getItem("userLoggedIn")
+    if (!isLoggedIn) {
+      sessionStorage.setItem("redirectAfterLogin", `/booking/${partnerId}`)
+      router.push("/user-login")
+      return
+    }
+  }, [partnerId, router])
 
   // Parse the date
   const bookingDate = selectedDate ? parseISO(selectedDate) : new Date()
@@ -42,49 +52,14 @@ export function BookingForm({ partnerId }: BookingFormProps) {
   const [withInsurance, setWithInsurance] = useState(false)
   const [requestedBags, setRequestedBags] = useState(1)
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
     pickupTime: "",
     dropoffTime: "",
   })
 
-  const [aadharData, setAadharData] = useState({
-    aadharNumber: "",
-    otp: "",
-    isOtpSent: false,
-    isVerified: false,
-    linkedMobile: "",
-  })
-
   const [isUpdatingTimes, setIsUpdatingTimes] = useState(false)
 
-  const handleSendOtp = async () => {
-    if (aadharData.aadharNumber.length !== 12) {
-      alert("Please enter a valid 12-digit AADHAR number")
-      return
-    }
-
-    // Mock API call - in real implementation, this would call UIDAI API
-    const mockLinkedNumber = "+91-" + aadharData.aadharNumber.slice(-4) + "XXXX"
-    setAadharData((prev) => ({
-      ...prev,
-      isOtpSent: true,
-      linkedMobile: mockLinkedNumber,
-    }))
-    alert(`OTP sent to ${mockLinkedNumber}`)
-  }
-
-  const handleVerifyOtp = async () => {
-    if (aadharData.otp.length !== 6) {
-      alert("Please enter a valid 6-digit OTP")
-      return
-    }
-
-    // Accept any 6-digit OTP for demo purposes
-    setAadharData((prev) => ({ ...prev, isVerified: true }))
-    alert("AADHAR verified successfully!")
-  }
+  // Get user info from session storage
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo") || "{}")
 
   // Remove the automatic duration upgrade logic - keep duration selection manual only
   useEffect(() => {
@@ -149,15 +124,8 @@ export function BookingForm({ partnerId }: BookingFormProps) {
 
   const handleProceedToPayment = () => {
     // Validate form
-    if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.pickupTime ||
-      !formData.dropoffTime ||
-      !aadharData.isVerified
-    ) {
-      alert("Please fill in all required fields and verify your AADHAR number")
+    if (!formData.pickupTime || !formData.dropoffTime) {
+      alert("Please select pickup and drop-off times")
       return
     }
 
@@ -166,8 +134,12 @@ export function BookingForm({ partnerId }: BookingFormProps) {
       return
     }
 
-    // Store booking data in sessionStorage for payment page
+    // Generate booking ID
+    const bookingId = `BK${Date.now()}`
+
+    // Store booking data in sessionStorage for drop-off page
     const bookingData = {
+      bookingId,
       partnerId,
       partnerName: partner.name,
       duration: selectedDuration,
@@ -175,11 +147,21 @@ export function BookingForm({ partnerId }: BookingFormProps) {
       allocatedBags,
       withInsurance,
       totalPrice,
-      customerDetails: formData,
+      customerDetails: {
+        fullName: userInfo.name,
+        email: userInfo.email,
+        phone: userInfo.phone,
+        pickupTime: formData.pickupTime,
+        dropoffTime: formData.dropoffTime,
+      },
+      bookingDate: selectedDate || new Date().toISOString(),
+      dropoffTime: new Date().toISOString(), // Will be updated when actually dropped off
     }
 
     sessionStorage.setItem("bookingData", JSON.stringify(bookingData))
-    router.push(`/payment/${partnerId}`)
+
+    // Redirect to drop-off page instead of payment
+    router.push(`/drop-off/${bookingId}`)
   }
 
   const handleDurationSelect = (duration: string) => {
@@ -225,131 +207,57 @@ export function BookingForm({ partnerId }: BookingFormProps) {
         <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Booking Form */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            {/* Customer Details */}
+            {/* User Information Display */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg sm:text-xl">Customer Details</CardTitle>
+                <CardTitle className="text-lg sm:text-xl flex items-center">
+                  <User className="w-5 h-5 mr-2" />
+                  Booking Details
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid gap-4">
-                  <div>
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <Input
-                      id="fullName"
-                      placeholder="Enter your full name"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, fullName: e.target.value }))}
-                      className="h-12"
-                      required
-                    />
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <span className="font-semibold text-green-800">Account Verified</span>
                   </div>
-
-                  {/* AADHAR Verification Section */}
-                  <div className="space-y-3">
-                    <Label htmlFor="aadhar">AADHAR Number *</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="aadhar"
-                        placeholder="Enter 12-digit AADHAR number"
-                        value={aadharData.aadharNumber}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "").slice(0, 12)
-                          setAadharData((prev) => ({ ...prev, aadharNumber: value }))
-                        }}
-                        className="h-12 flex-1"
-                        maxLength={12}
-                        disabled={aadharData.isVerified}
-                        required
-                      />
-                      <Button
-                        type="button"
-                        onClick={handleSendOtp}
-                        disabled={
-                          aadharData.aadharNumber.length !== 12 || aadharData.isOtpSent || aadharData.isVerified
-                        }
-                        className="h-12 px-4 bg-blue-600 hover:bg-blue-700"
-                      >
-                        {aadharData.isVerified ? "Verified" : aadharData.isOtpSent ? "OTP Sent" : "Send OTP"}
-                      </Button>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Name:</span>
+                      <p className="font-medium">{userInfo.name || "N/A"}</p>
                     </div>
+                    <div>
+                      <span className="text-gray-600">Email:</span>
+                      <p className="font-medium">{userInfo.email || "N/A"}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Phone:</span>
+                      <p className="font-medium">{userInfo.phone || "N/A"}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">AADHAR:</span>
+                      <p className="font-medium text-green-600">✓ Verified</p>
+                    </div>
+                  </div>
+                </div>
 
-                    {aadharData.isOtpSent && !aadharData.isVerified && (
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-600">OTP sent to linked mobile: {aadharData.linkedMobile}</p>
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="Enter 6-digit OTP"
-                            value={aadharData.otp}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\D/g, "").slice(0, 6)
-                              setAadharData((prev) => ({ ...prev, otp: value }))
-                            }}
-                            className="h-12 flex-1"
-                            maxLength={6}
-                          />
-                          <Button
-                            type="button"
-                            onClick={handleVerifyOtp}
-                            disabled={aadharData.otp.length !== 6}
-                            className="h-12 px-4 bg-green-600 hover:bg-green-700"
-                          >
-                            Verify OTP
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-
-                    {aadharData.isVerified && (
-                      <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
-                        </div>
-                        <span className="text-sm text-green-800 font-medium">AADHAR verified successfully</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      value={formData.email}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                      className="h-12"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      placeholder="+91-XXXXXXXXXX"
-                      value={formData.phone}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                      className="h-12"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="bags">Number of Bags *</Label>
-                    <Select
-                      value={requestedBags.toString()}
-                      onValueChange={(value) => setRequestedBags(Number.parseInt(value))}
-                    >
-                      <SelectTrigger className="h-12">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num} Bag{num > 1 ? "s" : ""}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div>
+                  <Label htmlFor="bags">Number of Bags *</Label>
+                  <Select
+                    value={requestedBags.toString()}
+                    onValueChange={(value) => setRequestedBags(Number.parseInt(value))}
+                  >
+                    <SelectTrigger className="h-12">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                        <SelectItem key={num} value={num.toString()}>
+                          {num} Bag{num > 1 ? "s" : ""}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {requestedBags !== allocatedBags && (
@@ -390,7 +298,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
                   <div>
-                    <Label htmlFor="pickupTime">Drop-off Time </Label>
+                    <Label htmlFor="pickupTime">Drop-off Time *</Label>
                     <Input
                       id="pickupTime"
                       type="time"
@@ -426,7 +334,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
                     <p className="text-xs text-red-600 mt-1">⚠️ Arrive within 30 minutes or charges will auto-upgrade</p>
                   </div>
                   <div>
-                    <Label htmlFor="dropoffTime">Pickup Time   </Label>
+                    <Label htmlFor="dropoffTime">Pickup Time *</Label>
                     <Input
                       id="dropoffTime"
                       type="time"
@@ -687,7 +595,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
 
                   {canAccommodate ? (
                     <Button className="w-full bg-red-600 hover:bg-red-700 h-12" onClick={handleProceedToPayment}>
-                      Proceed to Payment
+                      Proceed to Drop-off
                     </Button>
                   ) : (
                     <Button disabled className="w-full h-12">

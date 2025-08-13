@@ -73,7 +73,7 @@ export function SearchFilters() {
   ]
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 h-[calc(100vh-8rem)] overflow-y-auto pr-2">
       {/* Price Range */}
       <Card>
         <Collapsible open={openSections.price} onOpenChange={() => toggleSection("price")}>

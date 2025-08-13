@@ -88,7 +88,16 @@ export function PartnerDetails({ partnerId }: PartnerDetailsProps) {
   const AvailabilityIcon = getAvailabilityIcon(availabilityPercentage)
 
   const handleBookLocation = () => {
-    router.push(`/booking/${partner.id}`)
+    // Check if user is logged in (you can implement proper auth check here)
+    const isLoggedIn = localStorage.getItem("userToken") || sessionStorage.getItem("userLoggedIn")
+
+    if (!isLoggedIn) {
+      // Store the intended destination for after login
+      sessionStorage.setItem("redirectAfterLogin", `/booking/${partner.id}`)
+      router.push("/user-login")
+    } else {
+      router.push(`/booking/${partner.id}`)
+    }
   }
 
   const handleContactPartner = () => {
@@ -340,15 +349,15 @@ export function PartnerDetails({ partnerId }: PartnerDetailsProps) {
                 disabled={partner.currentAvailableBags < 2}
                 onClick={handleBookLocation}
               >
-                {partner.currentAvailableBags < 2 ? "Fully Booked" : "Book This Location"}
+                {partner.currentAvailableBags < 2 ? "Fully Booked" : "Login to Book Location"}
               </Button>
 
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" className="w-full" onClick={handleContactPartner}>
+                <Button variant="outline" className="w-full bg-transparent" onClick={handleContactPartner}>
                   <Phone className="w-4 h-4 mr-1" />
                   Call
                 </Button>
-                <Button variant="outline" className="w-full" onClick={handleGetDirections}>
+                <Button variant="outline" className="w-full bg-transparent" onClick={handleGetDirections}>
                   <Navigation className="w-4 h-4 mr-1" />
                   Directions
                 </Button>
