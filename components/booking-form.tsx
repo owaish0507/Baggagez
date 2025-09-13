@@ -187,179 +187,195 @@ export function BookingForm({ partnerId }: BookingFormProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="mb-6 sm:mb-8">
-          <Button variant="outline" onClick={handleGoBack} className="mb-4 h-10 sm:h-auto bg-transparent">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Back to Partner Details</span>
-            <span className="sm:hidden">Back</span>
-          </Button>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Complete Your Booking</h1>
-          <p className="text-gray-600">
-            {partner.name} • {getDateDisplayText()}
-            {isValidBookingDate && !isToday(bookingDate) && (
-              <span className="text-gray-500 ml-1">({format(bookingDate, "EEEE")})</span>
-            )}
-          </p>
-        </div>
+    <div className="w-full min-h-screen">
+      <div className="w-full max-w-none px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-4 md:py-6 lg:py-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <Button
+              variant="outline"
+              onClick={handleGoBack}
+              className="mb-3 sm:mb-4 h-8 sm:h-10 bg-transparent text-xs sm:text-sm"
+            >
+              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Back to Partner Details</span>
+              <span className="sm:hidden">Back</span>
+            </Button>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 leading-tight">
+              Complete Your Booking
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">
+              {partner.name} • {getDateDisplayText()}
+              {isValidBookingDate && !isToday(bookingDate) && (
+                <span className="text-gray-500 ml-1">({format(bookingDate, "EEEE")})</span>
+              )}
+            </p>
+          </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Booking Form */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            {/* User Information Display */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg sm:text-xl flex items-center">
-                  <User className="w-5 h-5 mr-2" />
-                  Booking Details
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <span className="font-semibold text-green-800">Account Verified</span>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-600">Name:</span>
-                      <p className="font-medium">{userInfo.name || "N/A"}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {/* Booking Form */}
+            <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6">
+              {/* User Information Display */}
+              <Card>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="text-base sm:text-lg md:text-xl flex items-center">
+                    <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    Booking Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 sm:space-y-4">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                      <span className="font-semibold text-green-800 text-sm sm:text-base">Account Verified</span>
                     </div>
-                    <div>
-                      <span className="text-gray-600">Email:</span>
-                      <p className="font-medium">{userInfo.email || "N/A"}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Phone:</span>
-                      <p className="font-medium">{userInfo.phone || "N/A"}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">AADHAR:</span>
-                      <p className="font-medium text-green-600">✓ Verified</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="bags">Number of Bags *</Label>
-                  <Select
-                    value={requestedBags.toString()}
-                    onValueChange={(value) => setRequestedBags(Number.parseInt(value))}
-                  >
-                    <SelectTrigger className="h-12">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num} Bag{num > 1 ? "s" : ""}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {requestedBags !== allocatedBags && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
-                    <div className="flex items-start gap-2">
-                      <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div className="text-sm">
-                        <p className="text-blue-800">
-                          <strong>Note:</strong> Storage slots are allocated in multiples of 2 for optimal organization.
-                          You'll get {allocatedBags} slots for your {requestedBags} bag{requestedBags > 1 ? "s" : ""} at
-                          no extra cost.
-                        </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+                      <div>
+                        <span className="text-gray-600">Name:</span>
+                        <p className="font-medium">{userInfo.name || "N/A"}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Email:</span>
+                        <p className="font-medium">{userInfo.email || "N/A"}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Phone:</span>
+                        <p className="font-medium">{userInfo.phone || "N/A"}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">AADHAR:</span>
+                        <p className="font-medium text-green-600">✓ Verified</p>
                       </div>
                     </div>
                   </div>
-                )}
 
-                {!canAccommodate && (
-                  <div className="flex items-start gap-2 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-red-800">Insufficient Space</h4>
-                      <p className="text-sm text-red-700">
-                        This partner cannot accommodate {allocatedBags} bags. Only {partner.currentAvailableBags} slots
-                        available.
-                      </p>
+                  <div>
+                    <Label htmlFor="bags" className="text-sm sm:text-base">
+                      Number of Bags *
+                    </Label>
+                    <Select
+                      value={requestedBags.toString()}
+                      onValueChange={(value) => setRequestedBags(Number.parseInt(value))}
+                    >
+                      <SelectTrigger className="h-10 sm:h-12 text-sm sm:text-base">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                          <SelectItem key={num} value={num.toString()}>
+                            {num} Bag{num > 1 ? "s" : ""}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {requestedBags !== allocatedBags && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                      <div className="flex items-start gap-2">
+                        <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div className="text-xs sm:text-sm">
+                          <p className="text-blue-800">
+                            <strong>Note:</strong> Storage slots are allocated in multiples of 2 for optimal
+                            organization. You'll get {allocatedBags} slots for your {requestedBags} bag
+                            {requestedBags > 1 ? "s" : ""} at no extra cost.
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  )}
 
-            {/* Time Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg sm:text-xl">Pickup & Drop-off Time</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4">
-                  <div>
-                    <Label htmlFor="pickupTime">Drop-off Time *</Label>
-                    <Input
-                      id="pickupTime"
-                      type="time"
-                      value={formData.pickupTime}
-                      onChange={(e) => {
-                        setFormData((prev) => ({ ...prev, pickupTime: e.target.value }))
-                        // Auto-update drop-off time when pickup time changes
-                        if (e.target.value && selectedDuration) {
-                          setIsUpdatingTimes(true)
-                          const [hours, minutes] = e.target.value.split(":").map(Number)
-                          const pickupDate = new Date()
-                          pickupDate.setHours(hours, minutes, 0, 0)
+                  {!canAccommodate && (
+                    <div className="flex items-start gap-2 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-red-800 text-sm sm:text-base">Insufficient Space</h4>
+                        <p className="text-xs sm:text-sm text-red-700">
+                          This partner cannot accommodate {allocatedBags} bags. Only {partner.currentAvailableBags}{" "}
+                          slots available.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
-                          const dropoffDate = new Date(pickupDate)
-                          dropoffDate.setHours(dropoffDate.getHours() + Number.parseInt(selectedDuration))
+              {/* Time Selection */}
+              <Card>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="text-base sm:text-lg md:text-xl">Pickup & Drop-off Time</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <Label htmlFor="pickupTime" className="text-sm sm:text-base">
+                        Drop-off Time *
+                      </Label>
+                      <Input
+                        id="pickupTime"
+                        type="time"
+                        value={formData.pickupTime}
+                        onChange={(e) => {
+                          setFormData((prev) => ({ ...prev, pickupTime: e.target.value }))
+                          // Auto-update drop-off time when pickup time changes
+                          if (e.target.value && selectedDuration) {
+                            setIsUpdatingTimes(true)
+                            const [hours, minutes] = e.target.value.split(":").map(Number)
+                            const pickupDate = new Date()
+                            pickupDate.setHours(hours, minutes, 0, 0)
 
-                          const dropoffTime = `${dropoffDate.getHours().toString().padStart(2, "0")}:${dropoffDate.getMinutes().toString().padStart(2, "0")}`
-                          setFormData((prev) => ({ ...prev, dropoffTime: dropoffTime }))
+                            const dropoffDate = new Date(pickupDate)
+                            dropoffDate.setHours(dropoffDate.getHours() + Number.parseInt(selectedDuration))
 
-                          setTimeout(() => setIsUpdatingTimes(false), 100)
-                        }
-                      }}
-                      className="h-12"
-                      min={(() => {
-                        const now = new Date()
-                        const hours = now.getHours().toString().padStart(2, "0")
-                        const minutes = now.getMinutes().toString().padStart(2, "0")
-                        return `${hours}:${minutes}`
-                      })()}
-                      required
-                    />
-                    <p className="text-xs text-blue-600 mt-1">✓ Auto-set based on current time</p>
-                    <p className="text-xs text-red-600 mt-1">⚠️ Arrive within 30 minutes or charges will auto-upgrade</p>
-                  </div>
-                  <div>
-                    <Label htmlFor="dropoffTime">Pickup Time *</Label>
-                    <Input
-                      id="dropoffTime"
-                      type="time"
-                      value={formData.dropoffTime}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, dropoffTime: e.target.value }))}
-                      className="h-12"
-                      min={
-                        formData.pickupTime ||
-                        (() => {
+                            const dropoffTime = `${dropoffDate.getHours().toString().padStart(2, "0")}:${dropoffDate.getMinutes().toString().padStart(2, "0")}`
+                            setFormData((prev) => ({ ...prev, dropoffTime: dropoffTime }))
+
+                            setTimeout(() => setIsUpdatingTimes(false), 100)
+                          }
+                        }}
+                        className="h-10 sm:h-12 text-sm sm:text-base"
+                        min={(() => {
                           const now = new Date()
                           const hours = now.getHours().toString().padStart(2, "0")
                           const minutes = now.getMinutes().toString().padStart(2, "0")
                           return `${hours}:${minutes}`
-                        })()
-                      }
-                      required
-                    />
-                    <p className="text-xs text-blue-600 mt-1">
-                      ✓ Auto-calculated based on pickup time + selected duration
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">You can manually adjust if needed</p>
+                        })()}
+                        required
+                      />
+                      <p className="text-xs text-blue-600 mt-1">✓ Auto-set based on current time</p>
+                      <p className="text-xs text-red-600 mt-1">
+                        ⚠️ Arrive within 30 minutes or charges will auto-upgrade
+                      </p>
+                    </div>
+                    <div>
+                      <Label htmlFor="dropoffTime" className="text-sm sm:text-base">
+                        Pickup Time *
+                      </Label>
+                      <Input
+                        id="dropoffTime"
+                        type="time"
+                        value={formData.dropoffTime}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, dropoffTime: e.target.value }))}
+                        className="h-10 sm:h-12 text-sm sm:text-base"
+                        min={
+                          formData.pickupTime ||
+                          (() => {
+                            const now = new Date()
+                            const hours = now.getHours().toString().padStart(2, "0")
+                            const minutes = now.getMinutes().toString().padStart(2, "0")
+                            return `${hours}:${minutes}`
+                          })()
+                        }
+                        required
+                      />
+                      <p className="text-xs text-blue-600 mt-1">
+                        ✓ Auto-calculated based on pickup time + selected duration
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">You can manually adjust if needed</p>
+                    </div>
                   </div>
 
                   {/* Auto-Set Times Button */}
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       type="button"
                       variant="outline"
@@ -381,7 +397,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
 
                         setTimeout(() => setIsUpdatingTimes(false), 100)
                       }}
-                      className="flex-1"
+                      className="flex-1 text-xs sm:text-sm"
                     >
                       🕐 Set Current Time
                     </Button>
@@ -396,7 +412,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
                           dropoffTime: "",
                         }))
                       }}
-                      className="flex-1"
+                      className="flex-1 text-xs sm:text-sm"
                     >
                       🗑️ Clear Times
                     </Button>
@@ -404,12 +420,12 @@ export function BookingForm({ partnerId }: BookingFormProps) {
 
                   {/* Real-time Duration Display */}
                   {formData.pickupTime && formData.dropoffTime && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-lg">
+                    <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <Clock className="w-4 h-4 text-blue-600" />
-                        <span className="font-semibold text-blue-800">Calculated Duration</span>
+                        <span className="font-semibold text-blue-800 text-sm sm:text-base">Calculated Duration</span>
                       </div>
-                      <div className="text-sm text-blue-700">
+                      <div className="text-xs sm:text-sm text-blue-700">
                         {(() => {
                           const pickup = new Date(`2024-01-01T${formData.pickupTime}:00`)
                           const dropoff = new Date(`2024-01-01T${formData.dropoffTime}:00`)
@@ -430,7 +446,7 @@ export function BookingForm({ partnerId }: BookingFormProps) {
 
                           return (
                             <div>
-                              <p className="font-medium text-lg text-blue-800">
+                              <p className="font-medium text-base sm:text-lg text-blue-800">
                                 {diffHours}h {diffMinutes}m
                               </p>
                               <p className="text-xs mt-1">
@@ -455,160 +471,163 @@ export function BookingForm({ partnerId }: BookingFormProps) {
                       </div>
                     </div>
                   )}
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* Duration Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg sm:text-xl">Select Duration</CardTitle>
-              </CardHeader>
-
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                  {durations.map((duration) => {
-                    return (
-                      <div
-                        key={duration.hours}
-                        className={`border rounded-lg p-3 sm:p-4 cursor-pointer transition-colors ${
-                          selectedDuration === duration.hours
-                            ? "border-red-500 bg-red-50"
-                            : "border-gray-200 hover:border-red-300"
-                        }`}
-                        onClick={() => handleDurationSelect(duration.hours)}
-                      >
-                        <div className="text-center">
-                          <h4 className="font-semibold text-sm sm:text-base">{duration.hours} Hours</h4>
-                          <p className="text-lg sm:text-2xl font-bold text-red-600">₹{duration.price}</p>
-                          <p className="text-xs sm:text-sm text-gray-500">Without Insurance</p>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                {formData.pickupTime && formData.dropoffTime && (
-                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Info className="w-4 h-4 text-blue-600" />
-                      <p className="text-sm text-blue-800">
-                        Duration will automatically upgrade if your pickup/dropoff time exceeds the selected plan by
-                        more than 20 minutes.
-                        {(() => {
-                          const pickup = new Date(`2024-01-01T${formData.pickupTime}:00`)
-                          const dropoff = new Date(`2024-01-01T${formData.dropoffTime}:00`)
-                          if (dropoff < pickup) dropoff.setDate(dropoff.getDate() + 1)
-
-                          const diffHours = (dropoff.getTime() - pickup.getTime()) / (1000 * 60 * 60)
-                          const selectedHours = Number.parseInt(selectedDuration)
-
-                          if (diffHours > selectedHours + 0.33) {
-                            return " Your current time selection requires a higher duration plan."
-                          } else {
-                            return " Your current selection fits within the chosen plan."
-                          }
-                        })()}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-4 sm:mt-6 flex items-center space-x-2">
-                  <Checkbox
-                    id="insurance"
-                    checked={withInsurance}
-                    onCheckedChange={(checked) => setWithInsurance(checked as boolean)}
-                  />
-                  <Label htmlFor="insurance" className="text-sm cursor-pointer">
-                    Add Insurance Coverage (₹{selectedPlan?.priceWithInsurance! - selectedPlan?.price!} extra)
-                  </Label>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Cancellation Policy */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center text-lg sm:text-xl">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Cancellation Policy
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 sm:p-4">
-                  <h4 className="font-semibold text-yellow-800 mb-2">Free Cancellation</h4>
-                  <ul className="text-sm text-yellow-700 space-y-1">
-                    <li>
-                      • <strong>Free cancellation up to 30 minutes after booking</strong>
-                    </li>
-                    <li>• Full refund will be processed within 1-2 working days</li>
-                    <li>• After 30 minutes, cancellation charges may apply</li>
-                    <li>• No-show policy: 100% of booking amount will be charged</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Booking Summary - Sticky on desktop */}
-          <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-20">
+              {/* Duration Selection */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg sm:text-xl">Booking Summary</CardTitle>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="text-base sm:text-lg md:text-xl">Select Duration</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Duration:</span>
-                      <span>{selectedDuration} Hours</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Number of Bags:</span>
-                      <span>{requestedBags}</span>
-                    </div>
-                    {requestedBags !== allocatedBags && <div className="flex justify-between text-blue-600"></div>}
-                    <div className="flex justify-between">
-                      <span>Base Price ({selectedDuration}h):</span>
-                      <span>₹{selectedPlan?.price}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Bag Pairs ({bagPairs}):</span>
-                      <span>×{bagPairs}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Subtotal:</span>
-                      <span>₹{basePrice * bagPairs}</span>
-                    </div>
-                    {withInsurance && (
-                      <div className="flex justify-between">
-                        <span>Insurance ({bagPairs} pairs):</span>
-                        <span>₹{(basePriceWithInsurance - basePrice) * bagPairs}</span>
-                      </div>
-                    )}
-                    <div className="border-t pt-2 flex justify-between font-bold text-lg">
-                      <span>Total:</span>
-                      <span className="text-red-600">₹{totalPrice}</span>
-                    </div>
+
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+                    {durations.map((duration) => {
+                      return (
+                        <div
+                          key={duration.hours}
+                          className={`border rounded-lg p-2 sm:p-3 md:p-4 cursor-pointer transition-colors ${
+                            selectedDuration === duration.hours
+                              ? "border-red-500 bg-red-50"
+                              : "border-gray-200 hover:border-red-300"
+                          }`}
+                          onClick={() => handleDurationSelect(duration.hours)}
+                        >
+                          <div className="text-center">
+                            <h4 className="font-semibold text-xs sm:text-sm md:text-base">{duration.hours} Hours</h4>
+                            <p className="text-sm sm:text-lg md:text-2xl font-bold text-red-600">₹{duration.price}</p>
+                            <p className="text-xs text-gray-500">Without Insurance</p>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
 
-                  {canAccommodate ? (
-                    <Button className="w-full bg-red-600 hover:bg-red-700 h-12" onClick={handleProceedToPayment}>
-                      Proceed to Drop-off
-                    </Button>
-                  ) : (
-                    <Button disabled className="w-full h-12">
-                      Insufficient Space Available
-                    </Button>
+                  {formData.pickupTime && formData.dropoffTime && (
+                    <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <Info className="w-4 h-4 text-blue-600" />
+                        <p className="text-xs sm:text-sm text-blue-800">
+                          Duration will automatically upgrade if your pickup/dropoff time exceeds the selected plan by
+                          more than 20 minutes.
+                          {(() => {
+                            const pickup = new Date(`2024-01-01T${formData.pickupTime}:00`)
+                            const dropoff = new Date(`2024-01-01T${formData.dropoffTime}:00`)
+                            if (dropoff < pickup) dropoff.setDate(dropoff.getDate() + 1)
+
+                            const diffHours = (dropoff.getTime() - pickup.getTime()) / (1000 * 60 * 60)
+                            const selectedHours = Number.parseInt(selectedDuration)
+
+                            if (diffHours > selectedHours + 0.33) {
+                              return " Your current time selection requires a higher duration plan."
+                            } else {
+                              return " Your current selection fits within the chosen plan."
+                            }
+                          })()}
+                        </p>
+                      </div>
+                    </div>
                   )}
 
-                  <div className="text-xs text-gray-500 text-center">
-                    <Clock className="w-3 h-3 inline mr-1" />
-                    Free cancellation up to 30 mins after booking
+                  <div className="mt-3 sm:mt-4 md:mt-6 flex items-center space-x-2">
+                    <Checkbox
+                      id="insurance"
+                      checked={withInsurance}
+                      onCheckedChange={(checked) => setWithInsurance(checked as boolean)}
+                    />
+                    <Label htmlFor="insurance" className="text-xs sm:text-sm cursor-pointer">
+                      Add Insurance Coverage (₹{selectedPlan?.priceWithInsurance! - selectedPlan?.price!} extra)
+                    </Label>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Cancellation Policy */}
+              <Card>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="flex items-center text-base sm:text-lg md:text-xl">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    Cancellation Policy
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 sm:p-4">
+                    <h4 className="font-semibold text-yellow-800 mb-2 text-sm sm:text-base">Free Cancellation</h4>
+                    <ul className="text-xs sm:text-sm text-yellow-700 space-y-1">
+                      <li>
+                        • <strong>Free cancellation up to 30 minutes after booking</strong>
+                      </li>
+                      <li>• Full refund will be processed within 1-2 working days</li>
+                      <li>• After 30 minutes, cancellation charges may apply</li>
+                      <li>• No-show policy: 100% of booking amount will be charged</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Booking Summary - Sticky on desktop */}
+            <div className="lg:col-span-1">
+              <div className="lg:sticky lg:top-20">
+                <Card>
+                  <CardHeader className="pb-3 sm:pb-4">
+                    <CardTitle className="text-base sm:text-lg md:text-xl">Booking Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 sm:space-y-4">
+                    <div className="space-y-2 text-xs sm:text-sm">
+                      <div className="flex justify-between">
+                        <span>Duration:</span>
+                        <span>{selectedDuration} Hours</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Number of Bags:</span>
+                        <span>{requestedBags}</span>
+                      </div>
+                      {requestedBags !== allocatedBags && <div className="flex justify-between text-blue-600"></div>}
+                      <div className="flex justify-between">
+                        <span>Base Price ({selectedDuration}h):</span>
+                        <span>₹{selectedPlan?.price}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Bag Pairs ({bagPairs}):</span>
+                        <span>×{bagPairs}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span>₹{basePrice * bagPairs}</span>
+                      </div>
+                      {withInsurance && (
+                        <div className="flex justify-between">
+                          <span>Insurance ({bagPairs} pairs):</span>
+                          <span>₹{(basePriceWithInsurance - basePrice) * bagPairs}</span>
+                        </div>
+                      )}
+                      <div className="border-t pt-2 flex justify-between font-bold text-sm sm:text-base md:text-lg">
+                        <span>Total:</span>
+                        <span className="text-red-600">₹{totalPrice}</span>
+                      </div>
+                    </div>
+
+                    {canAccommodate ? (
+                      <Button
+                        className="w-full bg-red-600 hover:bg-red-700 h-10 sm:h-12 text-sm sm:text-base"
+                        onClick={handleProceedToPayment}
+                      >
+                        Proceed to Drop-off
+                      </Button>
+                    ) : (
+                      <Button disabled className="w-full h-10 sm:h-12 text-sm sm:text-base">
+                        Insufficient Space Available
+                      </Button>
+                    )}
+
+                    <div className="text-xs text-gray-500 text-center">
+                      <Clock className="w-3 h-3 inline mr-1" />
+                      Free cancellation up to 30 mins after booking
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>

@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { QRScanner } from "@/components/qr-scanner"
-import { PaymentOptions } from "@/components/payment-options"
 import { PaymentSuccess } from "@/components/payment-success"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,6 +15,7 @@ export default function PartnerDashboardPage() {
   const [scannedBooking, setScannedBooking] = useState<any>(null)
   const [paymentData, setPaymentData] = useState<any>(null)
   const [error, setError] = useState<string>("")
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
 
   // Mock partner data
   const partnerData = {
@@ -64,9 +64,24 @@ export default function PartnerDashboardPage() {
     setError(errorMessage)
   }
 
-  const handlePaymentComplete = (payment: any) => {
-    setPaymentData(payment)
-    setCurrentStep("success")
+  const handlePaymentComplete = () => {
+    setIsProcessing(true)
+
+    // Simulate booking confirmation process
+    setTimeout(() => {
+      const paymentData = {
+        bookingId: scannedBooking.bookingId,
+        paymentMethod: "confirmed",
+        amount: scannedBooking.totalAmount,
+        paymentId: `CONF${Date.now()}`,
+        status: "completed",
+        timestamp: new Date().toISOString(),
+      }
+
+      setIsProcessing(false)
+      setPaymentData(paymentData)
+      setCurrentStep("success")
+    }, 2000)
   }
 
   const handlePaymentError = (errorMessage: string) => {
@@ -112,23 +127,163 @@ export default function PartnerDashboardPage() {
       case "payment":
         return (
           <div className="space-y-6">
-            {error && (
-              <div className="max-w-2xl mx-auto">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
-                  <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
-                  <span className="text-red-800">{error}</span>
-                </div>
-              </div>
-            )}
-            <PaymentOptions
-              bookingData={scannedBooking}
-              onPaymentComplete={handlePaymentComplete}
-              onPaymentError={handlePaymentError}
-            />
-            <div className="text-center">
-              <Button variant="outline" onClick={() => setCurrentStep("scanner")}>
-                Back to Scanner
-              </Button>
+            {/* Booking Confirmation */}
+            <div className="max-w-2xl mx-auto">
+              <Card>
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl text-green-600 flex items-center justify-center">
+                    <CheckCircle className="w-8 h-8 mr-2" />
+                    Confirm Booking Details
+                  </CardTitle>
+                  <p className="text-gray-600">Review all details before confirming the booking</p>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Customer Information */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
+                      <Users className="w-5 h-5 mr-2" />
+                      Customer Information
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-gray-600">Name:</span>
+                        <span className="font-medium ml-2">{scannedBooking.customerName}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Phone:</span>
+                        <span className="font-medium ml-2">{scannedBooking.customerPhone || "+91-9876543210"}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Email:</span>
+                        <span className="font-medium ml-2">
+                          {scannedBooking.customerEmail || "customer@example.com"}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">ID Verified:</span>
+                        <span className="font-medium ml-2 text-green-600">✓ Verified</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Booking Details */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                      <Package className="w-5 h-5 mr-2" />
+                      Booking Details
+                    </h3>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Booking ID:</span>
+                        <span className="font-medium">{scannedBooking.bookingId}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Number of Bags:</span>
+                        <span className="font-medium">
+                          {scannedBooking.bags} bag{scannedBooking.bags > 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Storage Duration:</span>
+                        <span className="font-medium">{scannedBooking.duration}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Drop-off Time:</span>
+                        <span className="font-medium">{new Date().toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Expected Pickup:</span>
+                        <span className="font-medium">
+                          {new Date(Date.now() + 24 * 60 * 60 * 1000).toLocaleDateString()}
+                        </span>
+                      </div>
+                      {scannedBooking.withInsurance && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Insurance:</span>
+                          <span className="font-medium text-green-600">✓ Included</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Payment Summary */}
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-green-800 mb-3 flex items-center">
+                      <DollarSign className="w-5 h-5 mr-2" />
+                      Payment Summary
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Base Storage Fee:</span>
+                        <span>₹{Math.round(scannedBooking.totalAmount * 0.7)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Service Charge:</span>
+                        <span>₹{Math.round(scannedBooking.totalAmount * 0.15)}</span>
+                      </div>
+                      {scannedBooking.withInsurance && (
+                        <div className="flex justify-between">
+                          <span>Insurance Coverage:</span>
+                          <span>₹{Math.round(scannedBooking.totalAmount * 0.15)}</span>
+                        </div>
+                      )}
+                      <div className="border-t pt-2 flex justify-between font-bold text-lg">
+                        <span>Total Amount:</span>
+                        <span className="text-green-600">₹{scannedBooking.totalAmount}</span>
+                      </div>
+                      <div className="bg-white rounded p-2 mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Your Revenue (60%):</span>
+                          <span className="font-bold">₹{Math.round(scannedBooking.totalAmount * 0.6)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Storage Instructions */}
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+                      <AlertCircle className="w-5 h-5 mr-2" />
+                      Storage Instructions
+                    </h3>
+                    <ul className="text-sm text-yellow-700 space-y-1">
+                      <li>• Verify customer ID before accepting bags</li>
+                      <li>• Take photos of bags for security records</li>
+                      <li>• Store bags in designated secure area</li>
+                      <li>• Provide customer with pickup QR code</li>
+                      <li>• Keep bags safe until pickup time</li>
+                    </ul>
+                  </div>
+
+                  {/* Confirmation Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      variant="outline"
+                      className="flex-1 bg-transparent"
+                      onClick={() => setCurrentStep("scanner")}
+                    >
+                      Back to Scanner
+                    </Button>
+                    <Button
+                      className="flex-1 bg-green-600 hover:bg-green-700 h-12 text-lg"
+                      onClick={handlePaymentComplete}
+                      disabled={isProcessing}
+                    >
+                      {isProcessing ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          Confirming Booking...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-5 h-5 mr-2" />
+                          Confirm Booking & Accept Bags
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         )
