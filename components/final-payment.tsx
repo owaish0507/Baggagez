@@ -307,9 +307,7 @@ export function FinalPayment({ bookingId }: FinalPaymentProps) {
                     <p className="text-sm text-yellow-700">
                       Pay in cash when you collect your baggage. Please bring exact change if possible.
                     </p>
-                    <p className="text-xs text-yellow-600 mt-2">
-                      Note: A small convenience fee may apply for cash payments.
-                    </p>
+                    
                   </div>
                 </div>
               )}

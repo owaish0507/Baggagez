@@ -38,6 +38,10 @@ export function PartnerRegistrationForm() {
     },
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [applicationId, setApplicationId] = useState("")
+
   const businessTypes = [
     { value: "cafe", label: "Cafe/Restaurant", description: "Coffee shops, restaurants, food courts" },
     { value: "store", label: "Retail Store", description: "Shops, boutiques, retail outlets" },
@@ -136,9 +140,31 @@ export function PartnerRegistrationForm() {
       return
     }
 
-    // Handle form submission
-    console.log("Form submitted:", formData)
-    // Here you would typically send the data to your API
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch("/api/partners/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setApplicationId(result.applicationId)
+        setIsSubmitted(true)
+      } else {
+        alert(result.message || "Registration failed. Please try again.")
+      }
+    } catch (error) {
+      console.error("Registration error:", error)
+      alert("Registration failed. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleAmenityChange = (amenity: string, checked: boolean) => {
@@ -167,320 +193,437 @@ export function PartnerRegistrationForm() {
             </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Personal Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <Mail className="w-5 h-5 mr-2" />
-                  Personal Information
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <Input
-                      id="fullName"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, fullName: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Business Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <Building className="w-5 h-5 mr-2" />
-                  Business Information
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="businessName">Business Name *</Label>
-                    <Input
-                      id="businessName"
-                      value={formData.businessName}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, businessName: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="businessType">Business Type *</Label>
-                    <Select onValueChange={handleBusinessTypeChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your business type" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-60">
-                        {businessTypes.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
-                            <div className="flex flex-col">
-                              <span className="font-medium">{type.label}</span>
-                              <span className="text-xs text-gray-500">{type.description}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Custom Business Type Input */}
-                {formData.businessType === "other" && (
-                  <div>
-                    <Label htmlFor="customBusinessType">Specify Your Business Type *</Label>
-                    <Input
-                      id="customBusinessType"
-                      value={formData.customBusinessType}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, customBusinessType: e.target.value }))}
-                      placeholder="e.g., Laundry Service, Repair Shop, etc."
-                      required
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <Label htmlFor="description">Business Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                    placeholder="Describe your business and storage facility..."
-                  />
-                </div>
-              </div>
-
-              {/* Location Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <MapPin className="w-5 h-5 mr-2" />
-                  Location Information
-                </h3>
-                <div>
-                  <Label htmlFor="address">Full Address *</Label>
-                  <Textarea
-                    id="address"
-                    value={formData.address}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, address: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      value={formData.city}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="state">State *</Label>
-                    <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, state: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-60">
-                        {indianStates.map((state) => (
-                          <SelectItem key={state} value={state}>
-                            {state}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="pincode">Pincode *</Label>
-                    <Input
-                      id="pincode"
-                      value={formData.pincode}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, pincode: e.target.value }))}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Storage Details */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <Package className="w-5 h-5 mr-2" />
-                  Storage Details
-                </h3>
-                <div className="grid md:grid-cols-1 gap-4">
-                  <div>
-                    <Label htmlFor="maxBaggageLimit">Maximum Baggage Capacity *</Label>
-                    <Input
-                      id="maxBaggageLimit"
-                      type="number"
-                      min="2"
-                      step="2"
-                      value={formData.maxBaggageLimit}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, maxBaggageLimit: e.target.value }))}
-                      placeholder="e.g., 20, 40, 60"
-                      required
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Must be an even number (multiples of 2)</p>
-                  </div>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-green-800 mb-3">Standardized Pricing Structure</h4>
-                    <div className="grid md:grid-cols-3 gap-4 text-sm">
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-green-700">₹30 - ₹199</div>
-                        <div className="text-green-600">Base Pricing</div>
-                        <div className="text-xs text-green-600">2hrs to 24hrs</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-green-700">₹75 - ₹350</div>
-                        <div className="text-green-600">With Insurance</div>
-                        <div className="text-xs text-green-600">Enhanced protection</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-green-700">60% Revenue</div>
-                        <div className="text-green-600">Partner Share</div>
-                        <div className="text-xs text-green-600">You keep majority</div>
-                      </div>
-                    </div>
-                    <div className="mt-3 text-sm text-green-700">
-                      <p>
-                        <strong>Benefits:</strong> Transparent pricing • No price competition • Customer trust •
-                        Consistent revenue
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-800 mb-2">Baggage Allocation System</h4>
-                  <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• Baggage slots are allocated in multiples of 2</li>
-                    <li>• If a customer requests 3 bags, they get 4 slots (rounded up to next even number)</li>
-                    <li>• This ensures optimal space utilization and organization</li>
-                    <li>• Set your maximum capacity based on your available storage space</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Amenities */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Amenities & Facilities</h3>
-                <div className="grid md:grid-cols-3 gap-4">
-                  {amenityOptions.map((amenity) => (
-                    <div key={amenity} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={amenity}
-                        checked={formData.amenities.includes(amenity)}
-                        onCheckedChange={(checked) => handleAmenityChange(amenity, checked as boolean)}
+            {!isSubmitted ? (
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Personal Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <Mail className="w-5 h-5 mr-2" />
+                    Personal Information
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="fullName">Full Name *</Label>
+                      <Input
+                        id="fullName"
+                        value={formData.fullName}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, fullName: e.target.value }))}
+                        required
                       />
-                      <Label htmlFor={amenity} className="text-sm">
-                        {amenity.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </Label>
                     </div>
-                  ))}
+                    <div>
+                      <Label htmlFor="email">Email Address *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Phone Number *</Label>
+                      <Input
+                        id="phone"
+                        value={formData.phone}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Operating Hours */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Operating Hours
-                </h3>
-                <div className="space-y-3">
-                  {Object.keys(formData.operatingHours).map((day) => (
-                    <div key={day} className="flex items-center gap-4">
-                      <div className="w-20 text-sm font-medium capitalize">{day}</div>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="time"
-                          className="w-32"
-                          value={formData.operatingHours[day as keyof typeof formData.operatingHours].open}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              operatingHours: {
-                                ...prev.operatingHours,
-                                [day]: {
-                                  ...prev.operatingHours[day as keyof typeof prev.operatingHours],
-                                  open: e.target.value,
-                                },
-                              },
-                            }))
-                          }
-                        />
-                        <span className="text-sm text-gray-500">to</span>
-                        <Input
-                          type="time"
-                          className="w-32"
-                          value={formData.operatingHours[day as keyof typeof formData.operatingHours].close}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              operatingHours: {
-                                ...prev.operatingHours,
-                                [day]: {
-                                  ...prev.operatingHours[day as keyof typeof prev.operatingHours],
-                                  close: e.target.value,
-                                },
-                              },
-                            }))
-                          }
-                        />
+                {/* Business Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <Building className="w-5 h-5 mr-2" />
+                    Business Information
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="businessName">Business Name *</Label>
+                      <Input
+                        id="businessName"
+                        value={formData.businessName}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, businessName: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="businessType">Business Type *</Label>
+                      <Select onValueChange={handleBusinessTypeChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your business type" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {businessTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{type.label}</span>
+                                <span className="text-xs text-gray-500">{type.description}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Custom Business Type Input */}
+                  {formData.businessType === "other" && (
+                    <div>
+                      <Label htmlFor="customBusinessType">Specify Your Business Type *</Label>
+                      <Input
+                        id="customBusinessType"
+                        value={formData.customBusinessType}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, customBusinessType: e.target.value }))}
+                        placeholder="e.g., Laundry Service, Repair Shop, etc."
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <Label htmlFor="description">Business Description</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                      placeholder="Describe your business and storage facility..."
+                    />
+                  </div>
+                </div>
+
+                {/* Location Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <MapPin className="w-5 h-5 mr-2" />
+                    Location Information
+                  </h3>
+                  <div>
+                    <Label htmlFor="address">Full Address *</Label>
+                    <Textarea
+                      id="address"
+                      value={formData.address}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, address: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="city">City *</Label>
+                      <Input
+                        id="city"
+                        value={formData.city}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="state">State *</Label>
+                      <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, state: value }))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select state" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {indianStates.map((state) => (
+                            <SelectItem key={state} value={state}>
+                              {state}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="pincode">Pincode *</Label>
+                      <Input
+                        id="pincode"
+                        value={formData.pincode}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, pincode: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Storage Details */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <Package className="w-5 h-5 mr-2" />
+                    Storage Details
+                  </h3>
+                  <div className="grid md:grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="maxBaggageLimit">Maximum Baggage Capacity *</Label>
+                      <Input
+                        id="maxBaggageLimit"
+                        type="number"
+                        min="2"
+                        step="2"
+                        value={formData.maxBaggageLimit}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, maxBaggageLimit: e.target.value }))}
+                        placeholder="e.g., 20, 40, 60"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Must be an even number (multiples of 2)</p>
+                    </div>
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-green-800 mb-3">Standardized Pricing Structure</h4>
+                      <div className="grid md:grid-cols-3 gap-4 text-sm">
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-green-700">₹30 - ₹199</div>
+                          <div className="text-green-600">Base Pricing</div>
+                          <div className="text-xs text-green-600">2hrs to 24hrs</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-green-700">₹75 - ₹350</div>
+                          <div className="text-green-600">With Insurance</div>
+                          <div className="text-xs text-green-600">Enhanced protection</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold text-green-700">60% Revenue</div>
+                          <div className="text-green-600">Partner Share</div>
+                          <div className="text-xs text-green-600">You keep majority</div>
+                        </div>
+                      </div>
+                      <div className="mt-3 text-sm text-green-700">
+                        <p>
+                          <strong>Benefits:</strong> Transparent pricing • No price competition • Customer trust •
+                          Consistent revenue
+                        </p>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Business Type Examples */}
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-800 mb-3">Popular Business Types for Storage Partners</h4>
-                <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
-                  <div>
-                    <h5 className="font-medium text-gray-700 mb-2">High Traffic Locations:</h5>
-                    <ul className="space-y-1">
-                      <li>• Cafes & Restaurants near tourist spots</li>
-                      <li>• Retail stores in shopping areas</li>
-                      <li>• Hotels & lodges</li>
-                      <li>• Supermarkets & shopping centers</li>
-                    </ul>
                   </div>
-                  <div>
-                    <h5 className="font-medium text-gray-700 mb-2">Specialized Facilities:</h5>
-                    <ul className="space-y-1">
-                      <li>• Dedicated cloak rooms</li>
-                      <li>• Locker facilities</li>
-                      <li>• Travel agencies</li>
-                      <li>• Religious places with storage needs</li>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-800 mb-2">Baggage Allocation System</h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• Baggage slots are allocated in multiples of 2</li>
+                      <li>• If a customer requests 3 bags, they get 4 slots (rounded up to next even number)</li>
+                      <li>• This ensures optimal space utilization and organization</li>
+                      <li>• Set your maximum capacity based on your available storage space</li>
                     </ul>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex justify-center">
-                <Button type="submit" size="lg" className="bg-red-600 hover:bg-red-700 px-12">
-                  Submit Application
-                </Button>
+                {/* Amenities */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Amenities & Facilities</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {amenityOptions.map((amenity) => (
+                      <div key={amenity} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={amenity}
+                          checked={formData.amenities.includes(amenity)}
+                          onCheckedChange={(checked) => handleAmenityChange(amenity, checked as boolean)}
+                        />
+                        <Label htmlFor={amenity} className="text-sm">
+                          {amenity.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Operating Hours */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Operating Hours
+                  </h3>
+                  <div className="space-y-3">
+                    {Object.keys(formData.operatingHours).map((day) => (
+                      <div key={day} className="flex items-center gap-4">
+                        <div className="w-20 text-sm font-medium capitalize">{day}</div>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="time"
+                            className="w-32"
+                            value={formData.operatingHours[day as keyof typeof formData.operatingHours].open}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                operatingHours: {
+                                  ...prev.operatingHours,
+                                  [day]: {
+                                    ...prev.operatingHours[day as keyof typeof prev.operatingHours],
+                                    open: e.target.value,
+                                  },
+                                },
+                              }))
+                            }
+                          />
+                          <span className="text-sm text-gray-500">to</span>
+                          <Input
+                            type="time"
+                            className="w-32"
+                            value={formData.operatingHours[day as keyof typeof formData.operatingHours].close}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                operatingHours: {
+                                  ...prev.operatingHours,
+                                  [day]: {
+                                    ...prev.operatingHours[day as keyof typeof prev.operatingHours],
+                                    close: e.target.value,
+                                  },
+                                },
+                              }))
+                            }
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Business Type Examples */}
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-800 mb-3">Popular Business Types for Storage Partners</h4>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div>
+                      <h5 className="font-medium text-gray-700 mb-2">High Traffic Locations:</h5>
+                      <ul className="space-y-1">
+                        <li>• Cafes & Restaurants near tourist spots</li>
+                        <li>• Retail stores in shopping areas</li>
+                        <li>• Hotels & lodges</li>
+                        <li>• Supermarkets & shopping centers</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-gray-700 mb-2">Specialized Facilities:</h5>
+                      <ul className="space-y-1">
+                        <li>• Dedicated cloak rooms</li>
+                        <li>• Locker facilities</li>
+                        <li>• Travel agencies</li>
+                        <li>• Religious places with storage needs</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-center">
+                  <Button type="submit" size="lg" className="bg-red-600 hover:bg-red-700 px-12" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Submitting Application...
+                      </>
+                    ) : (
+                      "Submit Application"
+                    )}
+                  </Button>
+                </div>
+              </form>
+            ) : null}
+
+            {isSubmitted && (
+              <div className="text-center py-12">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-bold text-green-600 mb-4">Application Submitted Successfully!</h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  Thank you for your interest in becoming a storage partner with Baggages.
+                </p>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 max-w-md mx-auto">
+                  <div className="flex items-center justify-center mb-2">
+                    <Mail className="w-5 h-5 text-yellow-600 mr-2" />
+                    <span className="font-semibold text-yellow-800">Confirmation Email Sent!</span>
+                  </div>
+                  <p className="text-sm text-yellow-700">
+                    We've sent a detailed confirmation email to <strong>{formData.email}</strong> with your application
+                    details and next steps.
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-2xl mx-auto">
+                  <h3 className="text-xl font-semibold text-blue-800 mb-4">What happens next?</h3>
+                  <div className="space-y-3 text-left">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                        1
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-800">Application Review</p>
+                        <p className="text-blue-600 text-sm">
+                          Our team will review your application within 24-48 hours
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                        2
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-800">Verification Call</p>
+                        <p className="text-blue-600 text-sm">
+                          We'll contact you at {formData.phone} for verification and details
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                        3
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-800">Site Visit</p>
+                        <p className="text-blue-600 text-sm">
+                          Our representative will visit your location for final approval
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                        4
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-800">Onboarding</p>
+                        <p className="text-blue-600 text-sm">Complete setup and start earning with Baggages</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-8 space-y-4">
+                  <p className="text-gray-600">
+                    <strong>Application ID:</strong>{" "}
+                    <span className="font-mono bg-gray-100 px-2 py-1 rounded">{applicationId}</span>
+                  </p>
+                  <p className="text-gray-600">
+                    Questions? Contact us at{" "}
+                    <a href="mailto:partners@baggages.com" className="text-blue-600 hover:underline">
+                      partners@baggages.com
+                    </a>{" "}
+                    or call{" "}
+                    <a href="tel:+911234567890" className="text-blue-600 hover:underline">
+                      +91 12345 67890
+                    </a>
+                  </p>
+                </div>
               </div>
-            </form>
+            )}
           </CardContent>
         </Card>
       </div>
