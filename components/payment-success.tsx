@@ -82,20 +82,7 @@ Status: Completed
           </div>
 
           {/* Next Steps */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-800 mb-3 flex items-center">
-              <Package className="w-4 h-4 mr-2" />
-              Next Steps
-            </h4>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>
-                • Store the customer's {bookingData.bags} bag{bookingData.bags > 1 ? "s" : ""} securely
-              </li>
-              <li>• Provide storage receipt to customer</li>
-              <li>• Set pickup reminder for {bookingData.dropoffTime}</li>
-              <li>• Customer will return with booking QR code</li>
-            </ul>
-          </div>
+          
 
           {/* Action Buttons */}
           <div className="space-y-3">

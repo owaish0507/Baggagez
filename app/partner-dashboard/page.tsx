@@ -277,7 +277,7 @@ export default function PartnerDashboardPage() {
                       ) : (
                         <>
                           <CheckCircle className="w-5 h-5 mr-2" />
-                          Confirm Booking & Accept Bags
+                          Confirm Booking
                         </>
                       )}
                     </Button>
