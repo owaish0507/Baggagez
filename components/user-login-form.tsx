@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MapPin, User, CreditCard, CheckCircle, Eye, EyeOff, Mail, Phone } from "lucide-react"
+import { MapPin, User, CreditCard, CheckCircle, Eye, EyeOff, Mail, Phone, Info } from "lucide-react"
 import { LocationPermission } from "@/components/location-permission"
 import { InterestSelection } from "@/components/interest-selection"
 
@@ -191,36 +191,38 @@ export function UserLoginForm() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-none sm:max-w-2xl lg:max-w-4xl mx-auto px-1 sm:px-0">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6 lg:mb-8">
-          <TabsTrigger value="login" className="text-sm sm:text-base">
+        <TabsList className="grid w-full grid-cols-2 mb-3 sm:mb-4 md:mb-6 lg:mb-8 h-10 sm:h-12">
+          <TabsTrigger value="login" className="text-xs sm:text-sm md:text-base">
             Login
           </TabsTrigger>
-          <TabsTrigger value="signup" className="text-sm sm:text-base">
+          <TabsTrigger value="signup" className="text-xs sm:text-sm md:text-base">
             Sign Up
           </TabsTrigger>
         </TabsList>
 
         {/* Login Tab */}
         <TabsContent value="login">
-          <Card>
-            <CardHeader className="pb-3 sm:pb-4">
+          <Card className="w-full border-0 sm:border shadow-none sm:shadow-sm">
+            <CardHeader className="pb-2 sm:pb-3 md:pb-4 px-3 sm:px-6">
               <CardTitle className="text-xl sm:text-2xl text-center">Welcome Back</CardTitle>
-              <p className="text-center text-gray-600 text-sm sm:text-base">Sign in to your account to continue</p>
+              <p className="text-center text-gray-600 text-xs sm:text-sm md:text-base">
+                Sign in to your account to continue
+              </p>
             </CardHeader>
-            <CardContent className="space-y-4 sm:space-y-6">
+            <CardContent className="space-y-3 sm:space-y-4 md:space-y-6 px-3 sm:px-6">
               <div className="space-y-2">
-                <Label htmlFor="loginEmail" className="text-sm sm:text-base">
+                <Label htmlFor="loginEmail" className="text-xs sm:text-sm md:text-base">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   <Input
                     id="loginEmail"
                     type="email"
                     placeholder="Enter your email"
-                    className="pl-10 h-10 sm:h-12 text-sm sm:text-base"
+                    className="pl-10 h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base"
                     value={loginData.email}
                     onChange={(e) => handleLoginInputChange("email", e.target.value)}
                   />
@@ -228,7 +230,7 @@ export function UserLoginForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="loginPassword" className="text-sm sm:text-base">
+                <Label htmlFor="loginPassword" className="text-xs sm:text-sm md:text-base">
                   Password
                 </Label>
                 <div className="relative">
@@ -236,7 +238,7 @@ export function UserLoginForm() {
                     id="loginPassword"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="h-10 sm:h-12 pr-10 text-sm sm:text-base"
+                    className="h-9 sm:h-10 md:h-12 pr-10 text-xs sm:text-sm md:text-base"
                     value={loginData.password}
                     onChange={(e) => handleLoginInputChange("password", e.target.value)}
                   />
@@ -247,7 +249,11 @@ export function UserLoginForm() {
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                    ) : (
+                      <Eye className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -259,13 +265,13 @@ export function UserLoginForm() {
                     checked={loginData.rememberMe}
                     onCheckedChange={(checked) => handleLoginInputChange("rememberMe", checked as boolean)}
                   />
-                  <Label htmlFor="rememberMe" className="text-xs sm:text-sm">
+                  <Label htmlFor="rememberMe" className="text-xs sm:text-sm md:text-base">
                     Remember me
                   </Label>
                 </div>
                 <Button
                   variant="link"
-                  className="text-xs sm:text-sm text-red-600 hover:text-red-700 p-0 self-start sm:self-center"
+                  className="text-xs sm:text-sm md:text-base text-red-600 hover:text-red-700 p-0 self-start sm:self-center"
                 >
                   Forgot password?
                 </Button>
@@ -273,17 +279,17 @@ export function UserLoginForm() {
 
               <Button
                 onClick={handleLogin}
-                className="w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg bg-red-600 hover:bg-red-700"
+                className="w-full h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base lg:text-lg bg-red-600 hover:bg-red-700"
                 disabled={!loginData.email || !loginData.password}
               >
                 Sign In
               </Button>
 
-              <div className="text-center text-xs sm:text-sm text-gray-600">
+              <div className="text-center text-xs sm:text-sm md:text-base text-gray-600">
                 Don't have an account?{" "}
                 <Button
                   variant="link"
-                  className="text-red-600 hover:text-red-700 p-0 text-xs sm:text-sm"
+                  className="text-red-600 hover:text-red-700 p-0 text-xs sm:text-sm md:text-base"
                   onClick={() => setActiveTab("signup")}
                 >
                   Sign up here
@@ -296,38 +302,40 @@ export function UserLoginForm() {
         {/* Sign Up Tab */}
         <TabsContent value="signup">
           {/* Progress Indicator */}
-          <div className="flex items-center justify-center mb-4 sm:mb-6 lg:mb-8">
-            <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center justify-center mb-3 sm:mb-4 md:mb-6 lg:mb-8 px-4">
+            <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
               <div
-                className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full ${step >= 1 ? "bg-red-600 text-white" : "bg-gray-200 text-gray-600"}`}
+                className={`flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full text-xs sm:text-sm md:text-base ${step >= 1 ? "bg-red-600 text-white" : "bg-gray-200 text-gray-600"}`}
               >
-                <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                <User className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </div>
-              <div className={`w-8 sm:w-16 h-1 ${step >= 2 ? "bg-red-600" : "bg-gray-200"}`}></div>
+              <div className={`w-4 sm:w-8 md:w-16 h-1 ${step >= 2 ? "bg-red-600" : "bg-gray-200"}`}></div>
               <div
-                className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full ${step >= 2 ? "bg-red-600 text-white" : "bg-gray-200 text-gray-600"}`}
+                className={`flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full text-xs sm:text-sm md:text-base ${step >= 2 ? "bg-red-600 text-white" : "bg-gray-200 text-gray-600"}`}
               >
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </div>
-              <div className={`w-8 sm:w-16 h-1 ${step >= 3 ? "bg-red-600" : "bg-gray-200"}`}></div>
+              <div className={`w-4 sm:w-8 md:w-16 h-1 ${step >= 3 ? "bg-red-600" : "bg-gray-200"}`}></div>
               <div
-                className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full ${step >= 3 ? "bg-red-600 text-white" : "bg-gray-200 text-gray-600"}`}
+                className={`flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full text-xs sm:text-sm md:text-base ${step >= 3 ? "bg-red-600 text-white" : "bg-gray-200 text-gray-600"}`}
               >
-                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </div>
             </div>
           </div>
 
           {/* Step 1: Personal Information */}
           {step === 1 && (
-            <Card>
-              <CardHeader className="pb-3 sm:pb-4">
+            <Card className="w-full border-0 sm:border shadow-none sm:shadow-sm">
+              <CardHeader className="pb-2 sm:pb-3 md:pb-4 px-3 sm:px-6">
                 <CardTitle className="text-xl sm:text-2xl text-center">Create Your Account</CardTitle>
-                <p className="text-center text-gray-600 text-sm sm:text-base">Fill in your details to get started</p>
+                <p className="text-center text-gray-600 text-xs sm:text-sm md:text-base">
+                  Fill in your details to get started
+                </p>
               </CardHeader>
-              <CardContent className="space-y-4 sm:space-y-6">
+              <CardContent className="space-y-3 sm:space-y-4 md:space-y-6 px-3 sm:px-6">
                 <div className="space-y-2">
-                  <Label htmlFor="signupName" className="text-sm sm:text-base">
+                  <Label htmlFor="signupName" className="text-xs sm:text-sm md:text-base">
                     Full Name *
                   </Label>
                   <Input
@@ -336,21 +344,21 @@ export function UserLoginForm() {
                     placeholder="Enter your full name"
                     value={signupData.name}
                     onChange={(e) => handleSignupInputChange("name", e.target.value)}
-                    className="h-10 sm:h-12 text-sm sm:text-base"
+                    className="h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signupEmail" className="text-sm sm:text-base">
+                  <Label htmlFor="signupEmail" className="text-xs sm:text-sm md:text-base">
                     Email Address *
                   </Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     <Input
                       id="signupEmail"
                       type="email"
                       placeholder="Enter your email"
-                      className="pl-10 h-10 sm:h-12 text-sm sm:text-base"
+                      className="pl-10 h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base"
                       value={signupData.email}
                       onChange={(e) => handleSignupInputChange("email", e.target.value)}
                     />
@@ -358,16 +366,16 @@ export function UserLoginForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signupPhone" className="text-sm sm:text-base">
+                  <Label htmlFor="signupPhone" className="text-xs sm:text-sm md:text-base">
                     Phone Number *
                   </Label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     <Input
                       id="signupPhone"
                       type="tel"
                       placeholder="+91-XXXXXXXXXX"
-                      className="pl-10 h-10 sm:h-12 text-sm sm:text-base"
+                      className="pl-10 h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base"
                       value={signupData.phone}
                       onChange={(e) => handleSignupInputChange("phone", e.target.value)}
                     />
@@ -375,7 +383,7 @@ export function UserLoginForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signupPassword" className="text-sm sm:text-base">
+                  <Label htmlFor="signupPassword" className="text-xs sm:text-sm md:text-base">
                     Password *
                   </Label>
                   <div className="relative">
@@ -383,7 +391,7 @@ export function UserLoginForm() {
                       id="signupPassword"
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"
-                      className="h-10 sm:h-12 pr-10 text-sm sm:text-base"
+                      className="h-9 sm:h-10 md:h-12 pr-10 text-xs sm:text-sm md:text-base"
                       value={signupData.password}
                       onChange={(e) => handleSignupInputChange("password", e.target.value)}
                     />
@@ -394,13 +402,17 @@ export function UserLoginForm() {
                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                      ) : (
+                        <Eye className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                      )}
                     </Button>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-sm sm:text-base">
+                  <Label htmlFor="confirmPassword" className="text-xs sm:text-sm md:text-base">
                     Confirm Password *
                   </Label>
                   <div className="relative">
@@ -408,7 +420,7 @@ export function UserLoginForm() {
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your password"
-                      className="h-10 sm:h-12 pr-10 text-sm sm:text-base"
+                      className="h-9 sm:h-10 md:h-12 pr-10 text-xs sm:text-sm md:text-base"
                       value={signupData.confirmPassword}
                       onChange={(e) => handleSignupInputChange("confirmPassword", e.target.value)}
                     />
@@ -419,15 +431,32 @@ export function UserLoginForm() {
                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                      ) : (
+                        <Eye className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                      )}
                     </Button>
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4">
-                  <Label htmlFor="signupAadhar" className="text-sm sm:text-base">
-                    AADHAR Number *
-                  </Label>
+                <div className="space-y-3 sm:space-y-4 md:space-y-6">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="signupAadhar" className="text-xs sm:text-sm md:text-base">
+                      AADHAR Number *
+                    </Label>
+                    <div className="relative group">
+                      <Info className="w-4 h-4 text-blue-500 cursor-help" />
+                      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 sm:px-3 py-2 bg-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none w-48 sm:w-64 z-10">
+                        <div className="text-center">
+                          This website is built only to show investors and partners. Please enter any 12-digit Aadhaar
+                          number and a 6-digit OTP until our team integrates a real-time Aadhaar authentication
+                          verification API.
+                        </div>
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Input
                       id="signupAadhar"
@@ -438,24 +467,25 @@ export function UserLoginForm() {
                         const value = e.target.value.replace(/\D/g, "").slice(0, 12)
                         handleSignupInputChange("aadhar", value)
                       }}
-                      className="h-10 sm:h-12 flex-1 text-sm sm:text-base"
+                      className="h-9 sm:h-10 md:h-12 flex-1 text-xs sm:text-sm md:text-base"
                       maxLength={12}
                       disabled={signupData.aadharVerified}
                     />
                     <Button
                       onClick={handleSendAadharOtp}
                       disabled={signupData.aadhar.length !== 12 || aadharOtp.isOtpSent || signupData.aadharVerified}
-                      className="h-10 sm:h-12 px-4 sm:px-6 bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm whitespace-nowrap"
+                      className="h-9 sm:h-10 md:h-12 px-4 sm:px-6 bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm md:text-base whitespace-nowrap"
                     >
                       {signupData.aadharVerified ? (
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                       ) : aadharOtp.isOtpSent ? (
                         "OTP Sent"
                       ) : (
                         <>
-                          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                          <span className="hidden sm:inline">Send OTP</span>
-                          <span className="sm:hidden">OTP</span>
+                          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-1 sm:mr-2 md:mr-3" />
+                          <span className="hidden sm:inline md:hidden">Send OTP</span>
+                          <span className="sm:hidden md:inline">Send OTP</span>
+                          <span className="md:hidden">OTP</span>
                         </>
                       )}
                     </Button>
@@ -463,7 +493,7 @@ export function UserLoginForm() {
 
                   {aadharOtp.isOtpSent && !signupData.aadharVerified && (
                     <div className="space-y-2">
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm md:text-base text-gray-600">
                         OTP sent to linked mobile: {aadharOtp.linkedMobile}
                       </p>
                       <div className="flex gap-2">
@@ -474,13 +504,13 @@ export function UserLoginForm() {
                             const value = e.target.value.replace(/\D/g, "").slice(0, 6)
                             setAadharOtp((prev) => ({ ...prev, otp: value }))
                           }}
-                          className="h-10 sm:h-12 flex-1 text-sm sm:text-base"
+                          className="h-9 sm:h-10 md:h-12 flex-1 text-xs sm:text-sm md:text-base"
                           maxLength={6}
                         />
                         <Button
                           onClick={handleVerifyAadharOtp}
                           disabled={aadharOtp.otp.length !== 6}
-                          className="h-10 sm:h-12 px-3 sm:px-4 bg-green-600 hover:bg-green-700 text-xs sm:text-sm"
+                          className="h-9 sm:h-10 md:h-12 px-3 sm:px-4 bg-green-600 hover:bg-green-700 text-xs sm:text-sm md:text-base"
                         >
                           Verify
                         </Button>
@@ -490,8 +520,8 @@ export function UserLoginForm() {
 
                   {signupData.aadharVerified && (
                     <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm text-green-800 font-medium">
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm md:text-base text-green-800 font-medium">
                         AADHAR verified successfully
                       </span>
                     </div>
@@ -505,7 +535,7 @@ export function UserLoginForm() {
                     onCheckedChange={(checked) => handleSignupInputChange("agreeToTerms", checked as boolean)}
                     className="mt-0.5"
                   />
-                  <Label htmlFor="agreeTerms" className="text-xs sm:text-sm leading-relaxed">
+                  <Label htmlFor="agreeTerms" className="text-xs sm:text-sm md:text-base leading-relaxed">
                     I agree to the Terms of Service and Privacy Policy *
                   </Label>
                 </div>
@@ -521,16 +551,16 @@ export function UserLoginForm() {
                     !signupData.aadharVerified ||
                     !signupData.agreeToTerms
                   }
-                  className="w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg bg-red-600 hover:bg-red-700"
+                  className="w-full h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base lg:text-lg bg-red-600 hover:bg-red-700"
                 >
                   Continue
                 </Button>
 
-                <div className="text-center text-xs sm:text-sm text-gray-600">
+                <div className="text-center text-xs sm:text-sm md:text-base text-gray-600">
                   Already have an account?{" "}
                   <Button
                     variant="link"
-                    className="text-red-600 hover:text-red-700 p-0 text-xs sm:text-sm"
+                    className="text-red-600 hover:text-red-700 p-0 text-xs sm:text-sm md:text-base"
                     onClick={() => setActiveTab("login")}
                   >
                     Sign in here

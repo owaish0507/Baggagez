@@ -95,15 +95,15 @@ export function InterestSelection({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Select Your Interests</CardTitle>
-        <p className="text-center text-gray-600">
+    <Card className="w-full border-0 sm:border shadow-none sm:shadow-sm">
+      <CardHeader className="pb-2 sm:pb-3 md:pb-4 px-3 sm:px-6">
+        <CardTitle className="text-xl sm:text-2xl text-center">Select Your Interests</CardTitle>
+        <p className="text-center text-gray-600 text-xs sm:text-sm md:text-base">
           Choose categories that interest you to get personalized recommendations
         </p>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <CardContent className="space-y-4 sm:space-y-6 px-3 sm:px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {interestCategories.map((category) => {
             const Icon = category.icon
             const isSelected = localSelectedInterests.includes(category.id)
@@ -112,17 +112,17 @@ export function InterestSelection({
               <div
                 key={category.id}
                 onClick={() => toggleInterest(category.id)}
-                className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                className={`p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   isSelected ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 }`}
               >
                 <div className="flex items-start space-x-3">
                   <div className={`p-2 rounded-lg ${category.color}`}>
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium text-gray-900">{category.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{category.description}</p>
+                    <h3 className="font-medium text-gray-900 text-sm sm:text-base">{category.name}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">{category.description}</p>
                   </div>
                   {isSelected && (
                     <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center">
@@ -137,12 +137,12 @@ export function InterestSelection({
 
         {localSelectedInterests.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Selected Interests:</h4>
+            <h4 className="font-medium text-gray-900 text-sm sm:text-base">Selected Interests:</h4>
             <div className="flex flex-wrap gap-2">
               {localSelectedInterests.map((interestId) => {
                 const category = interestCategories.find((cat) => cat.id === interestId)
                 return (
-                  <Badge key={interestId} variant="secondary" className="px-3 py-1">
+                  <Badge key={interestId} variant="secondary" className="px-3 py-1 text-xs sm:text-sm">
                     {category?.name}
                   </Badge>
                 )
@@ -152,12 +152,16 @@ export function InterestSelection({
         )}
 
         <div className="space-y-3">
-          <Button onClick={handleSubmit} disabled={localSelectedInterests.length === 0} className="w-full h-12 text-lg">
+          <Button
+            onClick={handleSubmit}
+            disabled={localSelectedInterests.length === 0}
+            className="w-full h-9 sm:h-10 md:h-12 text-xs sm:text-sm md:text-base lg:text-lg bg-red-600 hover:bg-red-700"
+          >
             Complete Registration
           </Button>
 
           <div className="flex justify-center">
-            <Button onClick={onBack} variant="ghost" className="text-gray-600">
+            <Button onClick={onBack} variant="ghost" className="text-gray-600 text-xs sm:text-sm md:text-base">
               Back
             </Button>
           </div>
