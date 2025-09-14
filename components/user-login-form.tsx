@@ -468,7 +468,7 @@ export function UserLoginForm() {
                       </p>
                       <div className="flex gap-2">
                         <Input
-                          placeholder="Enter 6-digit OTP"
+                          placeholder="Enter 6-digit OTP(any random number)"
                           value={aadharOtp.otp}
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, "").slice(0, 6)
