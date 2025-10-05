@@ -15,8 +15,8 @@ export const Header = () => {
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16 lg:h-20">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
             <div className="relative w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12">
@@ -31,23 +31,22 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4 lg:space-x-8">
-            
+          <nav className="hidden md:flex items-center gap-x-6 lg:gap-x-8 ml-auto">
             <Link
               href="/become-partner"
-              className="text-gray-700 hover:text-red-600 transition-colors text-sm lg:text-base font-medium"
+              className="text-gray-700 hover:text-red-600 transition-colors text-base font-medium px-2 py-1"
             >
               Become Partner
             </Link>
             <Link
               href="/partner-login"
-              className="text-gray-700 hover:text-red-600 transition-colors text-sm lg:text-base font-medium"
+              className="text-gray-700 hover:text-red-600 transition-colors text-base font-medium px-2 py-1"
             >
               Partner Login
             </Link>
             <Link
               href="/user-login"
-              className="text-gray-700 hover:text-red-600 transition-colors text-sm lg:text-base font-medium"
+              className="text-gray-700 hover:text-red-600 transition-colors text-base font-medium px-2 py-1"
             >
               Login
             </Link>
@@ -63,10 +62,9 @@ export const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden border-t bg-white">
             <nav className="py-3 space-y-1">
-              
               <Link
                 href="/become-partner"
-                className="flex items-center px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors text-sm font-medium rounded-md"
+                className="flex items-center px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors text-base font-medium rounded-md"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Package className="w-4 h-4 mr-3" />
@@ -74,7 +72,7 @@ export const Header = () => {
               </Link>
               <Link
                 href="/partner-login"
-                className="flex items-center px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors text-sm font-medium rounded-md"
+                className="flex items-center px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors text-base font-medium rounded-md"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Package className="w-4 h-4 mr-3" />
@@ -82,7 +80,7 @@ export const Header = () => {
               </Link>
               <Link
                 href="/user-login"
-                className="flex items-center px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors text-sm font-medium rounded-md"
+                className="flex items-center px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors text-base font-medium rounded-md"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <User className="w-4 h-4 mr-3" />
