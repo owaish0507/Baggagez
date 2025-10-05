@@ -10,13 +10,13 @@ export function Footer() {
           {/* Column 1: Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
-              <Image
+              {/* <Image
                 src="/images/baggage-logo.jpg"
                 alt="Baggages Logo"
                 width={40}
                 height={40}
                 className="rounded-lg"
-              />
+              /> */}
               <span className="text-2xl font-bold">Baggages</span>
             </div>
             <p className="text-gray-300 text-sm">
