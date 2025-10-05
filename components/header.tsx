@@ -27,7 +27,7 @@ export const Header = () => {
                 className="object-contain rounded-lg"
               />
             </div>
-            <span className="text-lg sm:text-xl lg:text-2xl font-bold text-secondary-foreground">Baggages</span>
+          
           </Link>
 
           {/* Desktop Navigation */}
